@@ -86,4 +86,832 @@
         }
 
         /* --- Main Card Area --- */
-        main
+        main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 20px;
+        }
+
+        #empty-state {
+            display: none;
+            text-align: center;
+            padding: 30px;
+            font-size: 1.4rem;
+            color: var(--neon-cyan);
+            text-shadow: 0 0 10px var(--neon-blue);
+            border: 1px solid var(--neon-cyan);
+            border-radius: 15px;
+            background: var(--card-bg);
+            box-shadow: 0 0 20px rgba(6, 182, 212, 0.2) inset;
+        }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            color: var(--text-dim);
+            font-size: 2.5rem;
+            padding: 15px;
+            cursor: pointer;
+            z-index: 5;
+            transition: color 0.2s, text-shadow 0.2s;
+        }
+        
+        .nav-btn:active {
+            color: var(--neon-cyan);
+            text-shadow: 0 0 15px var(--neon-cyan);
+        }
+
+        #card-container {
+            flex: 1;
+            max-width: 400px;
+            height: 60vh;
+            perspective: 1000px;
+            margin: 0 10px;
+        }
+
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            text-align: center;
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 0 20px rgba(0,0,0,0.5), inset 0 0 15px rgba(255,255,255,0.05);
+        }
+
+        .card-front {
+            border: 1px solid var(--neon-cyan);
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.4), inset 0 0 10px rgba(6, 182, 212, 0.2);
+        }
+
+        .card-back {
+            border: 1px solid var(--neon-pink);
+            box-shadow: 0 0 15px rgba(217, 70, 239, 0.4), inset 0 0 10px rgba(217, 70, 239, 0.2);
+            transform: rotateY(180deg);
+        }
+
+        .card-domain {
+            position: absolute;
+            top: 20px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-dim);
+        }
+
+        .card-content {
+            font-size: 1.6rem;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+        .card-back .card-content {
+            font-size: 1.3rem;
+            font-weight: 400;
+        }
+
+        /* --- Rating Area --- */
+        #rating-area {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px 10px 40px;
+            background: linear-gradient(0deg, rgba(5,5,16,1) 40%, rgba(5,5,16,0) 100%);
+        }
+
+        .rating-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 50%;
+            width: 70px;
+            height: 70px;
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .rating-btn span {
+            font-size: 0.6rem;
+            margin-top: 5px;
+            color: var(--text-dim);
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .rating-btn:active {
+            transform: scale(0.9);
+        }
+
+        .rating-btn.active[data-val="known"] {
+            border-color: #22c55e;
+            box-shadow: 0 0 20px rgba(34, 197, 94, 0.6);
+            transform: scale(1.1);
+        }
+        .rating-btn.active[data-val="unsure"] {
+            border-color: #eab308;
+            box-shadow: 0 0 20px rgba(234, 179, 8, 0.6);
+            transform: scale(1.1);
+        }
+        .rating-btn.active[data-val="unknown"] {
+            border-color: #ef4444;
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.6);
+            transform: scale(1.1);
+        }
+
+        /* --- Settings Modal --- */
+        #settings-modal {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+            z-index: 100;
+            display: flex;
+            align-items: flex-end;
+            opacity: 1;
+            transition: opacity 0.3s;
+        }
+
+        #settings-modal.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .modal-content {
+            background: var(--bg-color);
+            width: 100%;
+            max-height: 90vh;
+            border-top: 2px solid var(--neon-purple);
+            box-shadow: 0 -10px 30px rgba(168, 85, 247, 0.3);
+            border-top-left-radius: 20px;
+            border-top-right-radius: 20px;
+            padding: 30px 20px;
+            overflow-y: auto;
+            transform: translateY(0);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        #settings-modal.hidden .modal-content {
+            transform: translateY(100%);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            color: var(--neon-pink);
+            text-shadow: 0 0 10px rgba(217, 70, 239, 0.5);
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .setting-group {
+            margin-bottom: 25px;
+        }
+
+        .setting-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: var(--neon-cyan);
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        select, .btn {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--neon-purple);
+            color: white;
+            border-radius: 8px;
+            font-size: 1rem;
+            margin-bottom: 10px;
+            outline: none;
+        }
+        
+        select option {
+            background: var(--bg-color);
+        }
+
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(255,255,255,0.05);
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* Toggle Switch */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 28px;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(255,255,255,0.2);
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px; width: 20px;
+            left: 4px; bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: var(--neon-cyan);
+            box-shadow: 0 0 10px var(--neon-cyan);
+        }
+        input:checked + .slider:before {
+            transform: translateX(22px);
+        }
+
+        .btn {
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: 0.2s;
+        }
+        .btn-shuffle {
+            background: rgba(6, 182, 212, 0.2);
+            border-color: var(--neon-cyan);
+            color: var(--neon-cyan);
+            box-shadow: 0 0 10px rgba(6, 182, 212, 0.2);
+        }
+        .btn-shuffle:active { background: var(--neon-cyan); color: #000; }
+        
+        .btn-danger {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: #ef4444;
+            color: #ef4444;
+        }
+        .btn-danger:active { background: #ef4444; color: #fff; }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div id="progress-text">1 / 200</div>
+        <div id="settings-btn">⚙️</div>
+    </header>
+    <div id="progress-bar-container">
+        <div id="progress-bar"></div>
+    </div>
+
+    <main>
+        <button class="nav-btn" id="prev-btn">◀</button>
+        
+        <div id="empty-state">
+            ⚡ DOMAIN MASTERED ⚡<br><br>
+            <span style="font-size:1rem; color:var(--text-dim);">Reset ratings or change filters to continue hacking.</span>
+        </div>
+
+        <div id="card-container">
+            <div class="card" id="card">
+                <div class="card-face card-front">
+                    <div class="card-domain" id="front-domain">Domain 1.0</div>
+                    <div class="card-content" id="front-content">Term</div>
+                </div>
+                <div class="card-face card-back">
+                    <div class="card-domain" id="back-domain">Domain 1.0</div>
+                    <div class="card-content" id="back-content">Definition</div>
+                </div>
+            </div>
+        </div>
+
+        <button class="nav-btn" id="next-btn">▶</button>
+    </main>
+
+    <div id="rating-area">
+        <div class="rating-btn" data-val="known">😀<span>Know It</span></div>
+        <div class="rating-btn" data-val="unsure">😐<span>Unsure</span></div>
+        <div class="rating-btn" data-val="unknown">🙁<span>Don't Know</span></div>
+    </div>
+
+    <div id="settings-modal" class="hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>SYSTEM CONFIG</h2>
+                <button class="close-btn" id="close-settings">✖</button>
+            </div>
+
+            <div class="setting-group">
+                <label>Card Display Mode</label>
+                <select id="setting-display">
+                    <option value="term">Term on Front</option>
+                    <option value="def">Definition on Front</option>
+                    <option value="random">Random / Mix Both</option>
+                </select>
+            </div>
+
+            <div class="setting-group">
+                <label>Filter by Domain</label>
+                <select id="setting-domain">
+                    <option value="all">All Domains (1.0 - 6.0)</option>
+                    <option value="1.0">Domain 1.0: IT Concepts</option>
+                    <option value="2.0">Domain 2.0: Infrastructure</option>
+                    <option value="3.0">Domain 3.0: Applications</option>
+                    <option value="4.0">Domain 4.0: Software Dev</option>
+                    <option value="5.0">Domain 5.0: Database</option>
+                    <option value="6.0">Domain 6.0: Security</option>
+                </select>
+            </div>
+
+            <div class="setting-group">
+                <div class="toggle-container">
+                    <span>Omit "Know It" Cards</span>
+                    <label class="switch">
+                        <input type="checkbox" id="setting-omit">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="setting-group">
+                <button class="btn btn-shuffle" id="btn-shuffle">🔀 Shuffle Deck</button>
+                <button class="btn btn-danger" id="btn-reset">⚠️ Reset All Ratings</button>
+            </div>
+        </div>
+    </div>
+
+<script>
+// --- FULL 200 COMPTIA TECH+ FLASHCARD DECK ---
+const masterDeck = [
+    // Domain 1.0: IT Concepts and Terminology (34 Cards)
+    {id: 1, domain: "1.0", term: "Data", definition: "Raw, unorganized facts that need to be processed. Data can be something simple and seemingly random and useless until it is organized."},
+    {id: 2, domain: "1.0", term: "Information", definition: "Data that has been processed, organized, structured, or presented in a given context to make it useful."},
+    {id: 3, domain: "1.0", term: "Binary (Base-2)", definition: "A numbering system that uses only two digits, 0 and 1, to represent data. The fundamental language of computers."},
+    {id: 4, domain: "1.0", term: "Decimal (Base-10)", definition: "The standard number system humans use daily, consisting of ten digits (0 through 9)."},
+    {id: 5, domain: "1.0", term: "Hexadecimal (Base-16)", definition: "A numbering system containing 16 sequential numbers as base units (0-9 and A-F). Commonly used for MAC addresses and IPv6."},
+    {id: 6, domain: "1.0", term: "Character (Char)", definition: "A single letter, number, or symbol used in computing and programming (e.g., 'A', '7', '&')."},
+    {id: 7, domain: "1.0", term: "String", definition: "A sequence of characters treated as a single data type. Used for text elements like names or sentences."},
+    {id: 8, domain: "1.0", term: "Integer", definition: "A whole number (not a fraction or decimal) that can be positive, negative, or zero."},
+    {id: 9, domain: "1.0", term: "Float / Floating Point", definition: "A numeric data type that represents values with fractional parts (decimals), like 3.14 or -0.01."},
+    {id: 10, domain: "1.0", term: "Boolean", definition: "A basic data type with only two possible values: True or False (1 or 0)."},
+    {id: 11, domain: "1.0", term: "Troubleshooting Step 1", definition: "Identify the problem. Question the user, replicate the issue, and determine symptoms."},
+    {id: 12, domain: "1.0", term: "Troubleshooting Step 2", definition: "Establish a theory of probable cause. Question the obvious first."},
+    {id: 13, domain: "1.0", term: "Troubleshooting Step 3", definition: "Test the theory to determine the exact cause of the problem."},
+    {id: 14, domain: "1.0", term: "Troubleshooting Step 4", definition: "Establish a plan of action to resolve the problem and implement the solution."},
+    {id: 15, domain: "1.0", term: "Troubleshooting Step 5", definition: "Verify full system functionality and, if applicable, implement preventive measures."},
+    {id: 16, domain: "1.0", term: "Troubleshooting Step 6", definition: "Document findings, actions, and outcomes for future reference."},
+    {id: 17, domain: "1.0", term: "Throughput", definition: "The actual amount of data successfully transferred across a network in a given time period."},
+    {id: 18, domain: "1.0", term: "Bandwidth", definition: "The maximum theoretical capacity of a network connection to transfer data."},
+    {id: 19, domain: "1.0", term: "Megahertz / Gigahertz", definition: "Units of measurement for processing speed (clock speed). 1 GHz = 1 billion cycles per second."},
+    {id: 20, domain: "1.0", term: "Bit (b)", definition: "The smallest unit of data in a computer, possessing a single binary value, either 0 or 1."},
+    {id: 21, domain: "1.0", term: "Byte (B)", definition: "A unit of digital data consisting of 8 bits, typically representing a single character."},
+    {id: 22, domain: "1.0", term: "Kilobyte (KB)", definition: "A measure of computer memory or storage equal to 1,024 bytes."},
+    {id: 23, domain: "1.0", term: "Megabyte (MB)", definition: "A unit of storage capacity equal to 1,024 Kilobytes (approx. 1 million bytes)."},
+    {id: 24, domain: "1.0", term: "Gigabyte (GB)", definition: "A unit of storage capacity equal to 1,024 Megabytes (approx. 1 billion bytes)."},
+    {id: 25, domain: "1.0", term: "Terabyte (TB)", definition: "A unit of storage capacity equal to 1,024 Gigabytes (approx. 1 trillion bytes)."},
+    {id: 26, domain: "1.0", term: "Petabyte (PB)", definition: "A unit of storage capacity equal to 1,024 Terabytes. Used in massive data centers."},
+    {id: 27, domain: "1.0", term: "Intellectual Property (IP)", definition: "Intangible creations of the human intellect, such as copyrights, patents, and trademarks."},
+    {id: 28, domain: "1.0", term: "Copyright", definition: "A legal right granting the creator of an original work exclusive rights to its use and distribution."},
+    {id: 29, domain: "1.0", term: "Trademark", definition: "A recognizable sign, design, or expression which identifies products or services of a particular source."},
+    {id: 30, domain: "1.0", term: "Patent", definition: "An exclusive right granted for an invention, providing the owner the right to exclude others from making or using it."},
+    {id: 31, domain: "1.0", term: "Digital Rights Management (DRM)", definition: "Technologies used to restrict the usage of proprietary hardware and copyrighted works."},
+    {id: 32, domain: "1.0", term: "Acceptable Use Policy (AUP)", definition: "A document stipulating constraints and practices that a user must agree to for access to a corporate network or the Internet."},
+    {id: 33, domain: "1.0", term: "Asset Management", definition: "The process of tracking an organization's hardware and software inventory throughout its lifecycle."},
+    {id: 34, domain: "1.0", term: "Ticketing System", definition: "A software program used by help desks to manage and track user support requests or issues."},
+
+    // Domain 2.0: Infrastructure (33 Cards)
+    {id: 35, domain: "2.0", term: "Input Device", definition: "Hardware used to send data to a computer (e.g., keyboard, mouse, microphone, webcam)."},
+    {id: 36, domain: "2.0", term: "Output Device", definition: "Hardware used to display or project data from a computer (e.g., monitor, printer, speakers)."},
+    {id: 37, domain: "2.0", term: "CPU (Central Processing Unit)", definition: "The 'brain' of the computer that executes instructions and processes data."},
+    {id: 38, domain: "2.0", term: "RAM (Random Access Memory)", definition: "Volatile, short-term memory that holds data currently being actively used by the OS and applications."},
+    {id: 39, domain: "2.0", term: "Motherboard", definition: "The main printed circuit board containing the primary components of a computer system and connectors for peripherals."},
+    {id: 40, domain: "2.0", term: "Power Supply Unit (PSU)", definition: "Hardware component that converts AC electricity from a wall outlet into DC electricity required by internal computer parts."},
+    {id: 41, domain: "2.0", term: "GPU (Graphics Processing Unit)", definition: "A specialized processor designed to accelerate graphics rendering and handle parallel processing tasks."},
+    {id: 42, domain: "2.0", term: "HDD (Hard Disk Drive)", definition: "Traditional non-volatile storage using spinning magnetic platters to store data. High capacity, slower speeds."},
+    {id: 43, domain: "2.0", term: "SSD (Solid State Drive)", definition: "Non-volatile storage using flash memory with no moving parts. Faster, quieter, and more durable than HDDs."},
+    {id: 44, domain: "2.0", term: "Optical Drive", definition: "A hardware device that uses lasers or light to read/write data from CDs, DVDs, or Blu-ray discs."},
+    {id: 45, domain: "2.0", term: "NIC (Network Interface Card)", definition: "A hardware component that connects a computer to a network, providing a physical or wireless link."},
+    {id: 46, domain: "2.0", term: "Switch", definition: "A network device that connects multiple devices within a LAN and intelligently forwards data frames using MAC addresses."},
+    {id: 47, domain: "2.0", term: "Router", definition: "A network device that connects multiple networks together and routes packets based on IP addresses."},
+    {id: 48, domain: "2.0", term: "Access Point (AP)", definition: "Networking hardware that allows Wi-Fi devices to connect to a wired network."},
+    {id: 49, domain: "2.0", term: "LAN (Local Area Network)", definition: "A network connecting devices within a limited geographic area, like a home, school, or office."},
+    {id: 50, domain: "2.0", term: "WAN (Wide Area Network)", definition: "A network spanning a large geographic area, connecting multiple LANs. The Internet is the largest WAN."},
+    {id: 51, domain: "2.0", term: "PAN (Personal Area Network)", definition: "A very small network used for connecting personal devices close to an individual (e.g., Bluetooth devices)."},
+    {id: 52, domain: "2.0", term: "WLAN (Wireless LAN)", definition: "A local area network that uses wireless network technology (Wi-Fi) instead of cables."},
+    {id: 53, domain: "2.0", term: "MAC Address", definition: "A 48-bit unique, permanent physical address burned into a network interface card by the manufacturer."},
+    {id: 54, domain: "2.0", term: "IPv4 Address", definition: "A 32-bit logical address assigned to devices on a network, formatted as four numbers separated by dots (e.g., 192.168.1.1)."},
+    {id: 55, domain: "2.0", term: "IPv6 Address", definition: "A 128-bit address designed to replace IPv4, providing vastly more IP addresses, formatted in hexadecimal."},
+    {id: 56, domain: "2.0", term: "DNS (Domain Name System)", definition: "The network service that translates human-readable domain names (google.com) into IP addresses."},
+    {id: 57, domain: "2.0", term: "DHCP (Dynamic Host Configuration Protocol)", definition: "A network protocol that automatically assigns IP addresses and network settings to client devices."},
+    {id: 58, domain: "2.0", term: "TCP (Transmission Control Protocol)", definition: "A connection-oriented networking protocol that guarantees delivery of data packets in the correct order."},
+    {id: 59, domain: "2.0", term: "UDP (User Datagram Protocol)", definition: "A connectionless networking protocol prioritized for speed over reliability (used in streaming, gaming)."},
+    {id: 60, domain: "2.0", term: "Fiber Optic Cable", definition: "Network cable that transmits data via pulses of light over glass or plastic strands. Very fast, immune to EMI."},
+    {id: 61, domain: "2.0", term: "Twisted Pair Cable", definition: "Standard copper networking cable (like Cat5e, Cat6) where wires are twisted together to reduce electromagnetic interference."},
+    {id: 62, domain: "2.0", term: "Coaxial Cable", definition: "Copper cable featuring a central conductor surrounded by insulation and a braided shield. Commonly used for Cable TV/Internet."},
+    {id: 63, domain: "2.0", term: "802.11 (Wi-Fi)", definition: "The IEEE standard that defines wireless local area networks (WLANs)."},
+    {id: 64, domain: "2.0", term: "Bluetooth", definition: "A wireless technology standard used for exchanging data over short distances using UHF radio waves (forming PANs)."},
+    {id: 65, domain: "2.0", term: "NFC (Near Field Communication)", definition: "A short-range wireless connectivity standard used for contactless payments and quick data exchange (usually within 4cm)."},
+    {id: 66, domain: "2.0", term: "IoT (Internet of Things)", definition: "The network of physical objects embedded with sensors, software, and connectivity to exchange data (e.g., smart thermostats)."},
+    {id: 67, domain: "2.0", term: "Server", definition: "A specialized computer or system that provides resources, data, services, or programs to other computers (clients)."},
+
+    // Domain 3.0: Applications and Software (33 Cards)
+    {id: 68, domain: "3.0", term: "Operating System (OS)", definition: "Software that manages computer hardware/software resources and provides common services for programs (e.g., Windows, macOS, Linux)."},
+    {id: 69, domain: "3.0", term: "Windows", definition: "A widely used proprietary operating system developed by Microsoft, known for broad hardware and software compatibility."},
+    {id: 70, domain: "3.0", term: "macOS", definition: "A proprietary operating system developed by Apple for Mac computers, based on a Unix foundation."},
+    {id: 71, domain: "3.0", term: "Linux", definition: "An open-source, highly customizable operating system kernel that serves as the basis for distributions like Ubuntu and RedHat."},
+    {id: 72, domain: "3.0", term: "ChromeOS", definition: "A lightweight OS by Google designed primarily to run web applications via the Chrome browser."},
+    {id: 73, domain: "3.0", term: "Mobile OS", definition: "Operating systems designed specifically for mobile devices, primarily iOS (Apple) and Android (Google)."},
+    {id: 74, domain: "3.0", term: "File System", definition: "The method and data structure an OS uses to keep track of files on a disk or partition (e.g., NTFS, ext4, APFS)."},
+    {id: 75, domain: "3.0", term: "NTFS", definition: "The default proprietary file system used by Microsoft Windows, offering large file support and file-level security."},
+    {id: 76, domain: "3.0", term: "ext4", definition: "A default file system used by many Linux distributions, known for performance and reliability."},
+    {id: 77, domain: "3.0", term: "File Extension", definition: "The suffix at the end of a filename (like .txt or .jpg) indicating the file format and how it should be opened."},
+    {id: 78, domain: "3.0", term: "Executable (.exe / .app / .sh)", definition: "A file that contains instructions meant to be run directly by the computer as a program."},
+    {id: 79, domain: "3.0", term: "Word Processing Software", definition: "Applications used to compose, edit, format, and print text documents (e.g., MS Word, Google Docs)."},
+    {id: 80, domain: "3.0", term: "Spreadsheet Software", definition: "Applications that organize data in rows and columns, allowing for complex calculations and charting (e.g., MS Excel, Sheets)."},
+    {id: 81, domain: "3.0", term: "Presentation Software", definition: "Applications used to create visual slide decks for public speaking and meetings (e.g., PowerPoint, Keynote)."},
+    {id: 82, domain: "3.0", term: "Web Browser", definition: "Software used to retrieve, present, and traverse information resources on the World Wide Web (e.g., Chrome, Firefox, Edge)."},
+    {id: 83, domain: "3.0", term: "Database Software", definition: "Applications designed to create, maintain, and query structured data collections (e.g., MS Access, Oracle)."},
+    {id: 84, domain: "3.0", term: "Open Source Software", definition: "Software with source code that anyone can inspect, modify, and enhance (often free)."},
+    {id: 85, domain: "3.0", term: "Proprietary Software (Closed Source)", definition: "Software owned by an individual or company (usually for-profit). Source code is kept secret and restricted."},
+    {id: 86, domain: "3.0", term: "Freeware", definition: "Proprietary software that is available for use at no monetary cost, though you do not own the source code."},
+    {id: 87, domain: "3.0", term: "Shareware", definition: "Software initially provided free of charge (as a trial), which requires payment later to retain functionality."},
+    {id: 88, domain: "3.0", term: "EULA (End-User License Agreement)", definition: "A legal contract between a software creator and the user, establishing the user's rights and restrictions."},
+    {id: 89, domain: "3.0", term: "Local Installation", definition: "Software installed directly onto the hard drive of a user's computer. Does not strictly require internet to run."},
+    {id: 90, domain: "3.0", term: "Network Installation", definition: "Software accessed over a LAN from a central server, allowing centralized management and updates."},
+    {id: 91, domain: "3.0", term: "Cloud Computing", definition: "The delivery of computing services (servers, storage, databases, software) over the Internet."},
+    {id: 92, domain: "3.0", term: "SaaS (Software as a Service)", definition: "A cloud model where a complete application is hosted by a vendor and accessed via a web browser (e.g., Office 365, Salesforce)."},
+    {id: 93, domain: "3.0", term: "PaaS (Platform as a Service)", definition: "A cloud model providing a framework/environment for developers to build and deploy applications without managing underlying hardware."},
+    {id: 94, domain: "3.0", term: "IaaS (Infrastructure as a Service)", definition: "A cloud model offering virtualized computing resources over the internet (e.g., virtual machines, storage)."},
+    {id: 95, domain: "3.0", term: "Public Cloud", definition: "Cloud resources owned and operated by a third-party provider and shared among multiple organizations over the internet."},
+    {id: 96, domain: "3.0", term: "Private Cloud", definition: "Cloud infrastructure dedicated strictly to one organization, offering higher control and security."},
+    {id: 97, domain: "3.0", term: "Hybrid Cloud", definition: "A computing environment that combines a public cloud and a private cloud, allowing data/apps to be shared between them."},
+    {id: 98, domain: "3.0", term: "Virtualization", definition: "Technology that allows you to create multiple simulated computing environments or dedicated resources from a single physical hardware system."},
+    {id: 99, domain: "3.0", term: "Hypervisor", definition: "Software that creates, runs, and manages virtual machines on a host OS or directly on bare metal."},
+    {id: 100, domain: "3.0", term: "Web Application", definition: "A client-server software application that a user runs inside a web browser, relying on internet connectivity."},
+
+    // Domain 4.0: Software Development (34 Cards)
+    {id: 101, domain: "4.0", term: "Programming Language", definition: "A formal language comprising a set of instructions that produce various kinds of output (e.g., Python, Java, C++)."},
+    {id: 102, domain: "4.0", term: "Algorithm", definition: "A step-by-step set of instructions or rules designed to solve a specific problem or perform a task."},
+    {id: 103, domain: "4.0", term: "Pseudocode", definition: "An informal high-level description of the operating principle of a computer program, written for human reading."},
+    {id: 104, domain: "4.0", term: "Flowchart", definition: "A visual representation of an algorithm or process, using standard geometric shapes to depict steps and decisions."},
+    {id: 105, domain: "4.0", term: "Variable", definition: "A named container in programming that holds a value or data that can change during program execution."},
+    {id: 106, domain: "4.0", term: "Constant", definition: "A type of variable in programming whose value cannot be altered once assigned."},
+    {id: 107, domain: "4.0", term: "Array", definition: "A data structure containing a group of items of the same data type, accessed by an index number."},
+    {id: 108, domain: "4.0", term: "Function / Method", definition: "A reusable block of code designed to perform a particular task when called by the program."},
+    {id: 109, domain: "4.0", term: "Object-Oriented Programming (OOP)", definition: "A programming paradigm based on the concept of 'objects' which can contain data (attributes) and code (methods)."},
+    {id: 110, domain: "4.0", term: "Object Property", definition: "A specific variable attached to an object that defines its characteristics (e.g., car.color)."},
+    {id: 111, domain: "4.0", term: "Looping (Iteration)", definition: "A programming concept where a set of instructions is repeatedly executed until a specific condition is met."},
+    {id: 112, domain: "4.0", term: "For Loop", definition: "A control flow statement for specifying iteration, running code a specific number of times."},
+    {id: 113, domain: "4.0", term: "While Loop", definition: "A control flow statement that repeats execution of code as long as a specified boolean condition is true."},
+    {id: 114, domain: "4.0", term: "Branching (Conditionals)", definition: "Programming logic that allows the program to take different paths depending on whether a condition is true or false."},
+    {id: 115, domain: "4.0", term: "If-Then-Else", definition: "A conditional statement that runs one block of code if a condition is true, and an alternative block if it is false."},
+    {id: 116, domain: "4.0", term: "Compiled Language", definition: "A language where source code is translated entirely into machine code by a compiler before execution (e.g., C, C++). Fast execution."},
+    {id: 117, domain: "4.0", term: "Interpreted Language", definition: "A language executed line-by-line by an interpreter at runtime (e.g., Python, JavaScript). Highly portable."},
+    {id: 118, domain: "4.0", term: "HTML (HyperText Markup Language)", definition: "The standard markup language used to structure documents to be displayed in a web browser."},
+    {id: 119, domain: "4.0", term: "CSS (Cascading Style Sheets)", definition: "A style sheet language used for describing the presentation, visual design, and layout of an HTML document."},
+    {id: 120, domain: "4.0", term: "JavaScript", definition: "A scripting language used to create interactive and dynamic behaviors on web pages."},
+    {id: 121, domain: "4.0", term: "Python", definition: "A high-level, interpreted language known for extreme readability, often used for data science and scripting."},
+    {id: 122, domain: "4.0", term: "Java", definition: "A popular object-oriented language known for its 'write once, run anywhere' portability via the Java Virtual Machine."},
+    {id: 123, domain: "4.0", term: "SQL (Structured Query Language)", definition: "The standard domain-specific language used for managing and querying relational databases."},
+    {id: 124, domain: "4.0", term: "Assembly Language", definition: "A low-level programming language that has a very strong correspondence to the architecture's machine code instructions."},
+    {id: 125, domain: "4.0", term: "Scripting Language", definition: "A type of programming language usually interpreted at runtime to automate tasks within a specific environment (e.g., Bash, PowerShell)."},
+    {id: 126, domain: "4.0", term: "IDE (Integrated Development Environment)", definition: "A software suite that consolidates basic tools required to write and test software (e.g., VS Code, Eclipse)."},
+    {id: 127, domain: "4.0", term: "API (Application Programming Interface)", definition: "A set of rules and protocols that allows one software application to interact with and extract data from another."},
+    {id: 128, domain: "4.0", term: "Version Control (Git)", definition: "A system that records changes to a file or set of files over time so you can recall specific versions later."},
+    {id: 129, domain: "4.0", term: "Bug", definition: "An error, flaw, or fault in a computer program that causes it to produce an incorrect or unexpected result."},
+    {id: 130, domain: "4.0", term: "Debugging", definition: "The process of finding, analyzing, and removing bugs or errors in software code."},
+    {id: 131, domain: "4.0", term: "Syntax Error", definition: "An error caused by a violation of the programming language's grammar rules (like a missing semicolon), preventing execution."},
+    {id: 132, domain: "4.0", term: "Logic Error", definition: "A bug where the program runs without crashing, but produces incorrect results due to flawed algorithm logic."},
+    {id: 133, domain: "4.0", term: "Runtime Error", definition: "An error that occurs while the program is executing, often leading to a crash (e.g., dividing by zero)."},
+    {id: 134, domain: "4.0", term: "SDLC (Software Development Life Cycle)", definition: "A structured process spanning planning, creating, testing, deploying, and maintaining software."},
+
+    // Domain 5.0: Database Fundamentals (33 Cards)
+    {id: 135, domain: "5.0", term: "Database", definition: "An organized collection of structured information or data, typically stored electronically in a computer system."},
+    {id: 136, domain: "5.0", term: "Relational Database", definition: "A database type that structures data into tables with rows and columns, establishing relationships between different tables."},
+    {id: 137, domain: "5.0", term: "Table / Relation", definition: "A collection of related data held in a structured format within a database, consisting of columns and rows."},
+    {id: 138, domain: "5.0", term: "Row / Record", definition: "A single, horizontally aligned entry in a database table representing a complete item or instance of data."},
+    {id: 139, domain: "5.0", term: "Column / Field", definition: "A vertically aligned set of values in a table, representing a specific attribute of the records (e.g., 'Last Name')."},
+    {id: 140, domain: "5.0", term: "Primary Key", definition: "A column (or set of columns) in a table that uniquely identifies each row (e.g., Employee ID). It cannot contain NULL values."},
+    {id: 141, domain: "5.0", term: "Foreign Key", definition: "A column in one table that refers to the primary key of another table, used to link the two tables together."},
+    {id: 142, domain: "5.0", term: "Schema", definition: "The structural blueprint or logical design of an entire database, showing tables, fields, and relationships."},
+    {id: 143, domain: "5.0", term: "DBMS (Database Management System)", definition: "Software used to create, manage, secure, and interact with databases (e.g., MySQL, Oracle, SQL Server)."},
+    {id: 144, domain: "5.0", term: "Flat File Database", definition: "A simple database storing all data in a single plain text file, where each line is a record (e.g., a CSV file)."},
+    {id: 145, domain: "5.0", term: "NoSQL Database", definition: "A non-relational database designed to handle unstructured or semi-structured data, highly scalable across distributed systems."},
+    {id: 146, domain: "5.0", term: "Document Database", definition: "A type of NoSQL database that stores data in flexible, JSON-like documents rather than rigid tables (e.g., MongoDB)."},
+    {id: 147, domain: "5.0", term: "Key-Value Store", definition: "A NoSQL database that stores data as a collection of key-value pairs (e.g., Redis). Great for caching."},
+    {id: 148, domain: "5.0", term: "Data Definition Language (DDL)", definition: "SQL commands used to define or alter database structure (e.g., CREATE, ALTER, DROP tables)."},
+    {id: 149, domain: "5.0", term: "Data Manipulation Language (DML)", definition: "SQL commands used for manipulating the actual data within tables (e.g., INSERT, UPDATE, DELETE)."},
+    {id: 150, domain: "5.0", term: "SELECT (SQL)", definition: "The SQL command used to query and retrieve data from one or more database tables."},
+    {id: 151, domain: "5.0", term: "INSERT (SQL)", definition: "The SQL command used to add new rows/records into a database table."},
+    {id: 152, domain: "5.0", term: "UPDATE (SQL)", definition: "The SQL command used to modify existing data within a database table."},
+    {id: 153, domain: "5.0", term: "DELETE (SQL)", definition: "The SQL command used to remove records from a database table."},
+    {id: 154, domain: "5.0", term: "GRANT / REVOKE (SQL)", definition: "Data Control Language (DCL) commands used to provide or remove permissions for database users."},
+    {id: 155, domain: "5.0", term: "Database Query", definition: "A formal request for data or information from a database, typically written in SQL."},
+    {id: 156, domain: "5.0", term: "Index", definition: "A data structure built on a database column to drastically speed up data retrieval operations (similar to a book's index)."},
+    {id: 157, domain: "5.0", term: "Normalization", definition: "The process of organizing data in a database to reduce redundancy and improve data integrity (e.g., 1NF, 2NF, 3NF)."},
+    {id: 158, domain: "5.0", term: "ACID Properties", definition: "A set of properties (Atomicity, Consistency, Isolation, Durability) guaranteeing reliable processing of database transactions."},
+    {id: 159, domain: "5.0", term: "Atomicity", definition: "The ACID rule stating a transaction must be all-or-nothing; if one part fails, the whole transaction is aborted."},
+    {id: 160, domain: "5.0", term: "Consistency", definition: "The ACID rule stating any transaction must bring the database from one valid state to another, adhering to constraints."},
+    {id: 161, domain: "5.0", term: "Isolation", definition: "The ACID rule ensuring concurrent transactions execute without interfering with one another."},
+    {id: 162, domain: "5.0", term: "Durability", definition: "The ACID rule ensuring once a transaction is committed, it remains saved even in the event of a system failure."},
+    {id: 163, domain: "5.0", term: "Database Dump / Export", definition: "The process of copying database data to a file for backup or migration purposes."},
+    {id: 164, domain: "5.0", term: "Data Type Constraint", definition: "A rule ensuring that the data entered into a column matches an expected format (e.g., Integer only, VARCHAR)."},
+    {id: 165, domain: "5.0", term: "Data Warehousing", definition: "A large-scale central repository of data pulled from multiple sources, optimized specifically for analysis and reporting."},
+    {id: 166, domain: "5.0", term: "Big Data", definition: "Massive, complex data sets that grow rapidly, typically characterized by the 3 Vs: Volume, Velocity, and Variety."},
+    {id: 167, domain: "5.0", term: "Data Mining", definition: "The practice of analyzing large databases in order to generate new information, patterns, and insights."},
+
+    // Domain 6.0: Security (33 Cards)
+    {id: 168, domain: "6.0", term: "CIA Triad", definition: "The foundational model for cybersecurity: Confidentiality, Integrity, and Availability."},
+    {id: 169, domain: "6.0", term: "Confidentiality", definition: "Ensuring that data is kept private and only accessed by authorized personnel (e.g., achieved via encryption)."},
+    {id: 170, domain: "6.0", term: "Integrity", definition: "Ensuring that data has not been modified or corrupted in transit or at rest (e.g., achieved via hashing)."},
+    {id: 171, domain: "6.0", term: "Availability", definition: "Ensuring that data and systems are accessible and operational when needed by authorized users (e.g., achieved via backups/redundancy)."},
+    {id: 172, domain: "6.0", term: "Authentication", definition: "The process of verifying the identity of a user, device, or system (proving you are who you say you are)."},
+    {id: 173, domain: "6.0", term: "Authorization", definition: "Determining what permissions or access rights an authenticated user possesses (what you are allowed to do)."},
+    {id: 174, domain: "6.0", term: "Accounting / Non-repudiation", definition: "Tracking user actions to provide accountability and ensure users cannot deny performing an action."},
+    {id: 175, domain: "6.0", term: "MFA (Multi-Factor Authentication)", definition: "Requiring two or more different forms of identity verification (e.g., Password + SMS code + Fingerprint)."},
+    {id: 176, domain: "6.0", term: "SSO (Single Sign-On)", definition: "An authentication service allowing a user to use one set of login credentials to access multiple applications."},
+    {id: 177, domain: "6.0", term: "Biometrics", definition: "Authentication using physical human characteristics (e.g., fingerprint, facial recognition, retina scan). Something you ARE."},
+    {id: 178, domain: "6.0", term: "Malware", definition: "Malicious software designed to infiltrate, damage, or disable computer systems and networks."},
+    {id: 179, domain: "6.0", term: "Virus", definition: "Malware that requires a host program to replicate and spread, usually triggered by human action (like opening a file)."},
+    {id: 180, domain: "6.0", term: "Worm", definition: "Self-replicating malware that spreads across networks without needing a host file or user interaction."},
+    {id: 181, domain: "6.0", term: "Trojan", definition: "Malware disguised as legitimate software to trick users into executing it, creating a backdoor for attackers."},
+    {id: 182, domain: "6.0", term: "Ransomware", definition: "Malware that encrypts a victim's files or locks their system, demanding payment (cryptocurrency) to restore access."},
+    {id: 183, domain: "6.0", term: "Spyware", definition: "Malware that secretly monitors and records user activity, keystrokes, and data, sending it to third parties."},
+    {id: 184, domain: "6.0", term: "Social Engineering", definition: "Manipulating humans into revealing confidential information or performing actions that compromise security."},
+    {id: 185, domain: "6.0", term: "Phishing", definition: "A social engineering attack via digital communication (usually email) masquerading as a trusted entity to steal credentials."},
+    {id: 186, domain: "6.0", term: "Vishing / Smishing", definition: "Phishing conducted over voice calls (Vishing) or SMS text messages (Smishing)."},
+    {id: 187, domain: "6.0", term: "DDoS (Distributed Denial of Service)", definition: "An attack utilizing multiple compromised systems (botnet) to flood a target server with traffic, bringing it offline."},
+    {id: 188, domain: "6.0", term: "Encryption", definition: "The process of converting plain text into unreadable ciphertext to secure it from unauthorized viewing."},
+    {id: 189, domain: "6.0", term: "Symmetric Encryption", definition: "An encryption method that uses the exact same key to both encrypt and decrypt data. Fast, but key sharing is risky."},
+    {id: 190, domain: "6.0", term: "Asymmetric Encryption", definition: "An encryption method using a mathematically linked key pair (Public Key to encrypt, Private Key to decrypt)."},
+    {id: 191, domain: "6.0", term: "Hashing", definition: "A one-way cryptographic function that turns data into a fixed-length string (hash). Used for verifying integrity and storing passwords safely."},
+    {id: 192, domain: "6.0", term: "VPN (Virtual Private Network)", definition: "A secure, encrypted tunnel over the internet connecting a device to a remote network, masking IP and protecting data."},
+    {id: 193, domain: "6.0", term: "Firewall", definition: "A network security device/software that monitors and filters incoming and outgoing network traffic based on rules."},
+    {id: 194, domain: "6.0", term: "Principle of Least Privilege", definition: "A security concept where a user is given only the bare minimum permissions necessary to perform their job duties."},
+    {id: 195, domain: "6.0", term: "Vulnerability", definition: "A weakness or flaw in a system, application, or process that could be exploited by an attacker."},
+    {id: 196, domain: "6.0", term: "Exploit", definition: "A piece of software or sequence of commands that takes advantage of a specific vulnerability to compromise a system."},
+    {id: 197, domain: "6.0", term: "Zero-Day", definition: "A vulnerability in software that is unknown to the vendor. Attackers exploit it before a patch or fix ('zero days' of protection) exists."},
+    {id: 198, domain: "6.0", term: "Patch Management", definition: "The systematic process of acquiring, testing, and installing multiple patches (code updates) to a computer system to fix security flaws."},
+    {id: 199, domain: "6.0", term: "Shoulder Surfing", definition: "A physical social engineering technique where an attacker observes someone typing passwords or viewing sensitive data over their shoulder."},
+    {id: 200, domain: "6.0", term: "Tailgating", definition: "A physical security breach where an unauthorized person follows an authorized person into a restricted area without authenticating."}
+];
+
+// --- App State ---
+let filteredDeck = [];
+let currentIndex = 0;
+let ratings = JSON.parse(localStorage.getItem('techplus_ratings')) || {};
+
+// DOM Elements
+const elProgressText = document.getElementById('progress-text');
+const elProgressBar = document.getElementById('progress-bar');
+const elSettingsBtn = document.getElementById('settings-btn');
+const elModal = document.getElementById('settings-modal');
+const elCloseSettings = document.getElementById('close-settings');
+const elCardContainer = document.getElementById('card-container');
+const elEmptyState = document.getElementById('empty-state');
+const elCard = document.getElementById('card');
+const elFrontDomain = document.getElementById('front-domain');
+const elFrontContent = document.getElementById('front-content');
+const elBackDomain = document.getElementById('back-domain');
+const elBackContent = document.getElementById('back-content');
+const elPrevBtn = document.getElementById('prev-btn');
+const elNextBtn = document.getElementById('next-btn');
+const ratingBtns = document.querySelectorAll('.rating-btn');
+
+// Settings Inputs
+const setDisplay = document.getElementById('setting-display');
+const setDomain = document.getElementById('setting-domain');
+const setOmit = document.getElementById('setting-omit');
+const btnShuffle = document.getElementById('btn-shuffle');
+const btnReset = document.getElementById('btn-reset');
+
+// Load settings from storage or defaults
+let appSettings = JSON.parse(localStorage.getItem('techplus_settings')) || {
+    displayMode: 'term',
+    domainFilter: 'all',
+    omitKnown: false
+};
+
+// Initialize Settings UI
+setDisplay.value = appSettings.displayMode;
+setDomain.value = appSettings.domainFilter;
+setOmit.checked = appSettings.omitKnown;
+
+// --- Core Logic ---
+
+// Shuffle Array (Fisher-Yates)
+function shuffle(array) {
+    let curId = array.length;
+    while (0 !== curId) {
+        let randId = Math.floor(Math.random() * curId);
+        curId -= 1;
+        let tmp = array[curId];
+        array[curId] = array[randId];
+        array[randId] = tmp;
+    }
+    return array;
+}
+
+// Build the deck based on filters
+function buildDeck() {
+    let temp = masterDeck.filter(card => {
+        // Domain Filter
+        if (appSettings.domainFilter !== 'all' && card.domain !== appSettings.domainFilter) return false;
+        // Mastery Filter
+        if (appSettings.omitKnown && ratings[card.id] === 'known') return false;
+        return true;
+    });
+    filteredDeck = shuffle(temp);
+    currentIndex = 0;
+    renderCard();
+}
+
+// Render the current card and progress
+function renderCard() {
+    if (filteredDeck.length === 0) {
+        elCardContainer.style.display = 'none';
+        elEmptyState.style.display = 'block';
+        elProgressText.innerText = "0 / 0";
+        elProgressBar.style.width = "0%";
+        updateRatingUI(null);
+        return;
+    }
+
+    elCardContainer.style.display = 'block';
+    elEmptyState.style.display = 'none';
+    elCard.classList.remove('flipped'); // Reset flip state
+
+    const card = filteredDeck[currentIndex];
+    
+    // Determine Front/Back based on setting
+    let frontText = card.term;
+    let backText = card.definition;
+    
+    if (appSettings.displayMode === 'def') {
+        frontText = card.definition;
+        backText = card.term;
+    } else if (appSettings.displayMode === 'random') {
+        if (Math.random() > 0.5) {
+            frontText = card.definition;
+            backText = card.term;
+        }
+    }
+
+    // Small delay to allow unflip animation to complete before text swap if needed
+    setTimeout(() => {
+        elFrontDomain.innerText = `Domain ${card.domain}`;
+        elFrontContent.innerText = frontText;
+        elBackDomain.innerText = `Domain ${card.domain}`;
+        elBackContent.innerText = backText;
+    }, 150); 
+
+    // Update Progress
+    elProgressText.innerText = `${currentIndex + 1} / ${filteredDeck.length}`;
+    const pct = ((currentIndex + 1) / filteredDeck.length) * 100;
+    elProgressBar.style.width = `${pct}%`;
+
+    // Update Rating UI
+    updateRatingUI(card.id);
+}
+
+function updateRatingUI(cardId) {
+    ratingBtns.forEach(btn => btn.classList.remove('active'));
+    if (!cardId) return;
+    const currentRating = ratings[cardId];
+    if (currentRating) {
+        const btn = document.querySelector(`.rating-btn[data-val="${currentRating}"]`);
+        if (btn) btn.classList.add('active');
+    }
+}
+
+// Navigation
+function nextCard() {
+    if (filteredDeck.length === 0) return;
+    currentIndex = (currentIndex + 1) % filteredDeck.length;
+    renderCard();
+}
+
+function prevCard() {
+    if (filteredDeck.length === 0) return;
+    currentIndex = (currentIndex - 1 + filteredDeck.length) % filteredDeck.length;
+    renderCard();
+}
+
+// --- Event Listeners ---
+
+// Card Flip
+elCard.addEventListener('click', () => {
+    elCard.classList.toggle('flipped');
+});
+
+// Controls
+elNextBtn.addEventListener('click', nextCard);
+elPrevBtn.addEventListener('click', prevCard);
+
+// Swipe Gestures
+let startX = 0;
+let endX = 0;
+elCardContainer.addEventListener('touchstart', e => {
+    startX = e.changedTouches[0].screenX;
+});
+elCardContainer.addEventListener('touchend', e => {
+    endX = e.changedTouches[0].screenX;
+    if (startX - endX > 50) nextCard(); // Swipe left -> Next
+    if (endX - startX > 50) prevCard(); // Swipe right -> Prev
+});
+
+// Ratings
+ratingBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        if (filteredDeck.length === 0) return;
+        const val = e.currentTarget.getAttribute('data-val');
+        const cardId = filteredDeck[currentIndex].id;
+        
+        ratings[cardId] = val;
+        localStorage.setItem('techplus_ratings', JSON.stringify(ratings));
+        updateRatingUI(cardId);
+    });
+});
+
+// Settings Modal
+elSettingsBtn.addEventListener('click', () => elModal.classList.remove('hidden'));
+elCloseSettings.addEventListener('click', () => elModal.classList.add('hidden'));
+
+// Save Settings and Rebuild
+function saveSettings() {
+    appSettings = {
+        displayMode: setDisplay.value,
+        domainFilter: setDomain.value,
+        omitKnown: setOmit.checked
+    };
+    localStorage.setItem('techplus_settings', JSON.stringify(appSettings));
+    buildDeck();
+}
+
+setDisplay.addEventListener('change', saveSettings);
+setDomain.addEventListener('change', saveSettings);
+setOmit.addEventListener('change', saveSettings);
+
+// Actions
+btnShuffle.addEventListener('click', () => {
+    filteredDeck = shuffle(filteredDeck);
+    currentIndex = 0;
+    renderCard();
+    elModal.classList.add('hidden');
+});
+
+btnReset.addEventListener('click', () => {
+    if(confirm("Are you sure you want to reset all your mastery ratings? This cannot be undone.")) {
+        ratings = {};
+        localStorage.removeItem('techplus_ratings');
+        buildDeck();
+        elModal.classList.add('hidden');
+    }
+});
+
+// Init
+buildDeck();
+
+</script>
+</body>
+</html>
